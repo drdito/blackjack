@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <a class="navbar-brand" href="#">Full-Stack Blackjack</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/game"><button type="button" class="btn btn-danger">Play</button></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><button type="button" class="btn btn-danger">Stats</button></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/auth/logout"><button type="button" class="btn btn-danger">Logout</button></a>
+      </li>  
+   </ul>
+   <ul class="navbar-nav ml-auto">
+     <a class="navbar-brand" id="funds" href="#">Player Funds: ${{player_funds}}</a>
+   </ul>
+    
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <img id="googleImage" src="{{google_image}}">
+      </li>
+      <li class="nav-item">
+      
+      </li>
+      <li class="nav-item">
+        <a class="navbar-brand" href="#">Logged in as: {{display_name}}</a>
+      </li>
+    </ul>
+  </div>  
+</nav>
+<br>
+
+<div class="container">
+
+ <!-- ROW BEGINS -->
+  <div class="row">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-8">
+      <div class="card text-center cardCards">
+        <div class="card-header"><strong id="dealerScore" class="headerText">Dealer</strong></div>
+        <div class="card-body dealerHand">
+        </div> 
+      </div>
+    </div>
+    <div class="col-lg-2">
+    </div>
+  </div>
+  <!-- ROW ENDS -->
+  <div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+      <div class="text-center playerActionButtons">
+        <form>
+          <div class="form-group stuffToDelete">
+            <label>
+              <strong class="headerText">Wager($5-$500): </strong>
+            </label>
+            <input type="number" class="form-control" id="wager" required>
+          </div>
+          <button type="submit" class="btn btn-danger btn-lg stuffToDelete" id="deal">Deal Cards</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-4"></div>
+  </div>
+  <!-- ROW BEGINS -->
+  <div class="row">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-8">
+      <div class="card text-center cardCards">
+        <div id='bustMessage' class="card-header"><strong class="headerText">Your Hand</strong></div>
+        <div class="card-body playerHand"></div> 
+      </div>
+    </div>
+    <div class="col-lg-2">
+    </div>
+  </div>
+   <!-- ROW ENDS -->
+
+     <!-- The Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+     
+  
+        <!-- Modal body -->
+        <div class="modal-body text-center" id="modaltext">
+          
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+</div>

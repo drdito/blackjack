@@ -1,0 +1,47 @@
+#googleImage {
+  margin-right: 10px;
+}
+
+input {
+  text-align: center;
+}
+
+body {
+  background-image: url("/assets/images/cardtable.png")
+}
+
+.jumbotron {
+  background-color: #e9ecef24;
+}
+.cardCards{
+  background-color: #e9ecef24;
+}
+.headerText {
+  color: white;
+  font-size: 20px;
+}
+#bustMessage {
+  color: white;
+  font-size: 20px;
+}
+.disabled{
+  pointer-events: none;
+}
+
+#blackjackImage {
+  height: 450px;
+  width: 650px;
+}
+
+#mainHome {
+  font-family: 'Hanalei Fill', cursive;
+  color:#dc3545;
+}
+
+#mainHomeText {
+  font-size: 50px;
+}
+
+.hit, .stand, .split, .double {
+  margin: 5px;
+}
