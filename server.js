@@ -8,6 +8,7 @@ const gameRoutes = require('./routes/game-routes');
 const cookieSession = require('cookie-session');
 const keys = require('./config/keys');
 const passport = require('passport');
+const PORT = process.env.PORT || 3000;
 
 
 app.use(bodyParser.json());
@@ -46,6 +47,6 @@ app.get('/', (req, res) => {
 
 
 
-app.listen(3000, ()=> {
-  console.log("Server is listening on port 3000!");
+app.listen(PORT, ()=> {
+  console.log("Server is listening on port" + PORT);
 });

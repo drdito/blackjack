@@ -28,4 +28,17 @@ router.put('/update', authCheck, (req, res) => {
   });
 });
 
+router.put('/resetfunds', authCheck, (req, res) => {
+  const id = req.user.dataValues.id;
+  User.update({
+    player_funds: req.body.funds
+  }, {
+    where: {
+      id: id
+    }
+  }).then(function(result) {
+    res.json(result);
+  });
+});
+
 module.exports = router;

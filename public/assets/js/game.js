@@ -16,6 +16,10 @@ let playerScore = 0;
 let dealerScore = 0;
 let lowAceScore = 0;
 let playerFunds;
+let insuraceBoolean = false;
+let evenMoneyBoolean = false;
+let dealerBlackjack = false;
+let userBlackjack = false;
 
 
 const makeDeck = (cardsObject) => {
@@ -179,7 +183,133 @@ const stand = () => {
 }
 
 const winLoss = () => {
-  if (dealerScore > playerScore && dealerScore <= 21) {
+  if(insuraceBoolean && dealerBlackjack){
+    swal({
+      title: "The Dealer had Blackjack!",
+      text: "You took insurance and didn't lose anything!",
+      icon: "warning",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false,
+    })
+    .then(results => {
+       if(!results) {
+         location.reload();
+       }
+       else {
+         window.location = "../auth/logout";
+       }
+      });
+       
+  }
+  else if(userBlackjack && dealerBlackjack) {
+    swal({
+      title: "The dealer had Blackjack too!",
+      text: "However, you still win even money becuase you surrendered your hand!",
+      icon: "warning",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false,
+    })
+    .then(results => {
+      let newFunds = parseInt(playerFunds) + parseInt(wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    });  
+  }
+  else if(insuraceBoolean && !dealerBlackjack && playerScore < dealerScore && dealerScore <= 21) {
+    swal({
+      title: "Double Trouble!",
+      text: "You took insurance and the dealer did not have Blackjack. You also lost the hand. You lost 1.5 times your original wager",
+      icon: "error",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false,
+    })
+    .then(results => {
+      let newFunds = playerFunds - (1.5 * wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    });  
+  }
+  else if(insuraceBoolean && !dealerBlackjack && playerScore > dealerScore && playerScore <= 21) {
+    swal({
+      title: "Half victory!",
+      text: "You took insurance and the dealer did not have Blackjack. You then won the hand. You only won half as much as you would have!",
+      icon: "warning",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false,
+    })
+    .then(results => {
+      let newFunds = playerFunds + (0.5 * wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    });  
+  }
+  else if(insuraceBoolean && dealerScore === playerScore) {
+    swal({
+      title: "You pushed but...",
+      text: "You took insurance and the dealer did not have Blackjack, you've lost half your wager",
+      icon: "error",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false,
+    })
+    .then(results => {
+      let newFunds = playerFunds - (0.5 * wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    });  
+  }
+  else if (dealerScore > playerScore && dealerScore <= 21) {
     swal({
       title: "Oh no!!",
       text: "You lost!",
@@ -289,13 +419,67 @@ const winLoss = () => {
       })
     }); 
   }
+  else if (insuraceBoolean && playerScore > 21) {
+    swal({
+      title: "Well, that was as bad as it can get....",
+      text: "You busted and you took insurance when the dealer didn't have Blackjack, you have lost 1.5 times your original wager!",
+      icon: "error",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false
+    })
+    .then(results => {
+      let newFunds = playerFunds - (1.5 * wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    }); 
+  }
+  else if(insuraceBoolean && dealerScore > 21) {
+    swal({
+      title: "Small Victories...",
+      text: "The dealer busted, but you took insurance when the dealer did not have Blackjack, you've only won half your wager!",
+      icon: "warning",
+      buttons: ["Make new bet?", "Quit and Logout?"],
+      closeOnClickOutside: false
+    })
+    .then(results => {
+      let newFunds = playerFunds - (0.5 * wager);
+      let playerData = {
+        funds: newFunds
+      }
+      $.ajax({
+        method: "PUT",
+        url: '/game/update',
+        data: playerData
+      }).then(data => {
+        if(!results) {
+          location.reload();
+        }
+        else {
+          window.location = "../auth/logout";
+        }
+      })
+    });  
+  }
   else if(playerScore > 21) {
     swal({
       title: "Oh no!!",
       text: "You busted, better luck next time!",
       icon: "error",
       buttons: ["Make new bet?", "Quit and Logout?"],
-      closeOnClickOutside: false,
+      closeOnClickOutside: false
     })
     .then(results => {
       let newFunds = playerFunds - wager;
@@ -336,6 +520,96 @@ const winLoss = () => {
   }
 }
 
+const insurace = () => {
+  if(dealerHand[1].charAt(0) === "a" && playerScore !== 21) {
+    swal({
+      title: "Insurance?",
+      text: "The dealer is showing an ace, would you like insurance?",
+      icon: "info",
+      buttons: ["Yes", "No"]
+    })
+    .then (response => {
+      if (response === null) {
+        insuraceBoolean = true;
+        if(dealerScore === 21 && playerScore !== 21) {
+          dealerBlackjack = true;
+          $('#dealerDownCard').attr('src', "/../assets/images/cards/" + dealerHand[0] + ".png" );
+          setTimeout(dealerPlay, 500);
+        }
+        else{
+          swal({
+            title: "Dealer does not have blackjack!",
+            text: "You've lost your insurance money, but you can still play the hand",
+            icon: "info",
+            button: "Return"
+          }) 
+        }
+      }
+      else {
+        if(dealerScore === 21 && playerScore !== 21) {
+          dealerBlackjack = true;
+          $('#dealerDownCard').attr('src', "/../assets/images/cards/" + dealerHand[0] + ".png" );
+          setTimeout(dealerPlay, 500);
+        } 
+      }
+    })
+  }
+  else if(dealerHand[1].charAt(0) === "a" && playerScore === 21) {
+    swal({
+      title: "Even Money?",
+      text: "The dealer is showing an ace, but you have blackjack. You can take your chances that the dealer does not have blackjack and win at 3:2 odds or you can surrender your hand and take even money.",
+      icon: "info",
+      buttons: ["Yes", "No"]
+    })
+    .then (response => {
+      if (response === null) {
+        evenMoneyBoolean = true;
+        if (dealerScore === 21 && playerScore === 21) {
+          dealerBlackjack = true;
+          userBlackjack = true;
+          $('#dealerDownCard').attr('src', "/../assets/images/cards/" + dealerHand[0] + ".png" );
+          setTimeout(dealerPlay, 500);
+        }
+        else{
+          swal({
+            title: "Dealer does not have blackjack!",
+            text: "But you simply win at even odds due to taking even money",
+            icon: "warning",
+            buttons: ["Make new bet?", "Quit and Logout?"],
+            closeOnClickOutside: false
+          }) 
+          .then(result =>{
+            let newFunds = parseInt(playerFunds) + parseInt(wager);
+            let playerData = {
+              funds: parseInt(newFunds)
+            }
+            $.ajax({
+              method: "PUT",
+              url: '/game/update',
+              data: playerData
+            }).then(data => {
+              if(!result) {
+                location.reload();
+              }
+              else {
+                window.location = "../auth/logout";
+              }
+            })  
+          });
+          
+        }
+      }
+      else {
+        $('#dealerDownCard').attr('src', "/../assets/images/cards/" + dealerHand[0] + ".png" );
+        console.log("What Up")
+        $("#score").text("Blackjack!!");
+        setTimeout(dealerPlay, 500); 
+      }
+    });  
+  } 
+}
+
+
 
 
 
@@ -344,6 +618,7 @@ shuffle(deck);
 
 $('#deal').on('click', (event) => {
   event.preventDefault();
+  $("#reset").prop("disabled",true);
   wager = $('#wager').val().trim();
   let rawPlayerFunds = $("#funds").text();
   let playerFundsArray = rawPlayerFunds.split("$");
@@ -378,7 +653,12 @@ $('#deal').on('click', (event) => {
   removeDealButton();
   $("#bustMessage").append("<div><strong id='score'></strong></div>");
   evaluateScore(playerHand);
-  if(playerScore === 21 && dealerScore !== 21){
+  evaluateDealerScore(dealerHand);
+  setTimeout (insurace, 500);
+  
+  
+  if(playerScore === 21 && dealerScore !== 21 && dealerHand[1].charAt(0) !== "a"){
+    $('#dealerDownCard').attr('src', "/../assets/images/cards/" + dealerHand[0] + ".png" );
     $("#hit").prop("disabled",true);
     $("#score").text("Blackjack!!");
     $('.stand').prop('disabled',true);
@@ -407,12 +687,23 @@ $('#deal').on('click', (event) => {
   $('.double').on('click', (event) => {
     event.preventDefault();
     wager = wager * 2;
+    if(wager > playerFunds) {
+      swal({
+        title: "You don't have enough money to do that!",
+        text: "Hopefully you do next time!",
+        icon: "error",
+        button: "Return"
+      }) 
+      wager = wager / 2; 
+    }
+    else {
     $("#hit").prop("disabled",true);
     $('.stand').prop('disabled',true);
     $(".double").prop("disabled",true);
     $(".split").prop("disabled",true);
     hit();
     stand();
+    }
   });
 
   $('.split').on('click', (event) => {
@@ -435,7 +726,40 @@ $('#deal').on('click', (event) => {
 }
 });
 
-
+$('#stats').on('click', event => {
+  event.preventDefault();
+  swal({
+    title: "Stat tracking in beta",
+    text: "Check back later!!",
+    icon: "warning",
+    button: "Return"
+  });  
+});
+$('#reset').on('click', event => {
+  event.preventDefault();
+  swal({
+    title: "Are you sure...",
+    text: "This will reset your funds to $1000, this cannot be undone.",
+    icon: "warning",
+    buttons: ["Yes", "No"]
+  }).then(response => {
+    if (response === null) {
+      let playerData = {
+        funds: 1000
+      }
+      $.ajax({
+        method: "PUT",
+        url: "/game/resetfunds",
+        data: playerData
+      }).then(data => {
+        location.reload();
+      })
+    }
+    else {
+      null;
+    }
+  })  
+});
 
 
 });
