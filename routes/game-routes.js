@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const User = require("../models/user.js");
+const db = require("../models/");
 
 const authCheck = (req, res, next) => {
   if(!req.user) {
@@ -17,7 +17,7 @@ router.get('/', authCheck, (req, res) => {
 
 router.put('/update', authCheck, (req, res) => {
   const id = req.user.dataValues.id;
-  User.update({
+  db.User.update({
     player_funds: req.body.funds
   }, {
     where: {
@@ -30,7 +30,7 @@ router.put('/update', authCheck, (req, res) => {
 
 router.put('/resetfunds', authCheck, (req, res) => {
   const id = req.user.dataValues.id;
-  User.update({
+  db.User.update({
     player_funds: req.body.funds
   }, {
     where: {
